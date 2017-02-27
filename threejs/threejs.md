@@ -169,3 +169,37 @@ new THREE.Vector3(-1, 2, -1)创建一个矢量，作为顶点位置追加到geom
 而由new THREE.Face3(0, 1, 3)创建一个三个顶点组成的面片，追加到geometry.faces数组中。三个参数分别是四个顶点在geometry.vertices中的序号。
 
 在之前版本的Three.js中，可以使用Face4创建四边形，如今已经弃用。由于四个点未必共面，所以使用三角形永远是最安全的方法。
+
+```js
+function drawAxes(scene) {
+    // x-axis
+    var xGeo = new THREE.Geometry();
+    xGeo.vertices.push(new THREE.Vector3(0, 0, 0));
+    xGeo.vertices.push(new THREE.Vector3(1, 0, 0));
+    var xMat = new THREE.LineBasicMaterial({
+        color: 0xff0000
+    });
+    var xAxis = new THREE.Line(xGeo, xMat);
+    scene.add(xAxis);
+    
+    // y-axis
+    var yGeo = new THREE.Geometry();
+    yGeo.vertices.push(new THREE.Vector3(0, 0, 0));
+    yGeo.vertices.push(new THREE.Vector3(0, 1, 0));
+    var yMat = new THREE.LineBasicMaterial({
+        color: 0x00ff00
+    });
+    var yAxis = new THREE.Line(yGeo, yMat);
+    scene.add(yAxis);
+    
+    // z-axis
+    var zGeo = new THREE.Geometry();
+    zGeo.vertices.push(new THREE.Vector3(0, 0, 0));
+    zGeo.vertices.push(new THREE.Vector3(0, 0, 1));
+    var zMat = new THREE.LineBasicMaterial({
+        color: 0x00ccff
+    });
+    var zAxis = new THREE.Line(zGeo, zMat);
+    scene.add(zAxis);
+}
+```

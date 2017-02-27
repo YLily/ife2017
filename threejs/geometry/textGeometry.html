@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>torus</title>
+	<title>textGeometry</title>
 	<script src="../js/three.js"></script>
 </head>
 <body onload = "init()">
@@ -22,16 +22,18 @@
 
             drawAxes(scene);
 
+            var material = new THREE.MeshBasicMaterial({
+                color: 0xffff00,
+                wireframe: true
+            })
+
 			var loader = new THREE.FontLoader();
 			loader.load('../fonts/helvetiker_regular.typeface.json', function(font){
 				var mesh = new THREE.Mesh(new THREE.TextGeometry('Hello', {
 					font: font,
 					size: 1,
 					height: 1
-				}), new THREE.MeshBasicMaterial({
-					color: 0xff0000,
-					wireframe: true
-				}));
+				}), material);
 				scene.add(mesh);
 			})
 
