@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>echarts</title>
+	<style type="text/css">
+		.chart{
+			width: 600px;
+			height: 400px;
+			background-color: #eee;
+		}
+	</style>
+	<script type="text/javascript" src="echarts.min.js"></script>
+</head>
+<body>
+	<div id="barChart" class="chart"></div>
+	<div id="lineChart" class="chart"></div>
+	<script type="text/javascript">
+		function chart(){
+			var bChart = echarts.init(document.getElementById('barChart'));
+			var lChart = echarts.init(document.getElementById('lineChart'));
+			var option = {
+				backgroundColor: '#f7f7f7',
+				textStyle: {
+			        color: 'rgba(55, 55, 55, .8)',
+			        fontWeight: 'bold'
+			    },
+				title: {
+					text: '一周空气污染调查报告'
+				},
+				tooltip: {},
+				legend: {
+					data: ['北京', '上海', '武汉']
+				},
+				xAxis: {
+					data: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']
+				},
+				yAxis: {},
+				series: [{
+						name: '北京',
+						type: 'bar',
+						data: [113, 56, 87, 108, 164, 189, 131],
+						itemStyle: {
+							normal: {
+								color: '#f38181'
+							},
+							emphasis: {
+						        shadowBlur: 4,
+						        shadowColor: 'rgba(0, 0, 0, .2)'
+							}
+						}
+					}, {
+						name: '上海',
+						type: 'bar',
+						data: [52, 73, 82, 93, 59, 81, 84],
+						itemStyle: {
+							normal: {
+								color: '#fce38a'
+							},
+							emphasis: {
+						        shadowBlur: 4,
+						        shadowColor: 'rgba(0, 0, 0, .2)'
+							}
+						}
+					}, {
+						name: '武汉',
+						type: 'bar',
+						data: [107, 88, 98, 49, 65, 78, 92],
+						itemStyle: {
+							normal: {
+								color: '#d6f7ad'
+							},
+							emphasis: {
+						        shadowBlur: 4,
+						        shadowColor: 'rgba(0, 0, 0, .2)'
+							}
+						}
+				}]
+			}
+			bChart.setOption(option);
+			var lOption = option;
+			for(var i = 0, l = option.series.length; i < l; i++){
+				lOption.series[i].type = 'line';
+			}
+			lChart.setOption(lOption);
+		}
+		window.onload = function(){
+			chart();
+		}
+	</script>
+</body>
+</html>
