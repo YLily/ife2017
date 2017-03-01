@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>car</title>
+	<script type="text/javascript" src="js/three.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+		function init(){
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize(800, 800);
+			renderer.setClearColor(0x888888);
+			document.getElementsByTagName('body')[0].appendChild(renderer.domElement);
+
+			renderer.shadowMap.enabled = true;
+            renderer.shadowMapSoft = true;
+
+			var scene = new THREE.Scene();
+			drawAxes(scene)
+
+			var camera = new THREE.PerspectiveCamera(60, 1/1, 2, 100);
+			camera.position.set(4, 2, 6);
+			camera.lookAt(new THREE.Vector3(0, 0, 0));
+			scene.add(camera);
+
+			var light = new THREE.SpotLight(0xffffff, 2, 100, Math.PI / 3);
+			light.position.set(-2, 12, 20);
+			light.castShadow = true;
+
+			light.shadow.camera.near = 1;
+			light.shadow.camera.far = 100;
+			light.shadow.camera.fov = 60;
+			light.shadow.camera.visible = true;
+
+			scene.add(light);
+
+			var cubema = new THREE.MeshLambertMaterial({
+					color: 0xe2dfd6
+				});
+			var wheelma = new THREE.MeshLambertMaterial({
+					color: 0x868686
+				});
+			var planema = new THREE.MeshLambertMaterial({
+					color: 0x9eb277
+				})
+
+			var cube = new THREE.Mesh(new THREE.CubeGeometry(4, 2, 2), cubema);
+			cube.castShadow = true;
+			scene.add(cube);
+
+			var wheel = new THREE.Mesh(new THREE.TorusGeometry(.3, .12, 20, 30), wheelma);
+			wheel.position.set(-1.2, -1, 1);
+			wheel.castShadow = true;
+			scene.add(wheel);
+
+			var wheel2 = new THREE.Mesh(new THREE.TorusGeometry(.3, .12, 20, 30), wheelma)
+			wheel2.position.set(1.2, -1, 1);
+			wheel2.castShadow = true;
+			scene.add(wheel2);
+
+			var plane = new THREE.Mesh(new THREE.PlaneGeometry(20, 16), planema)
+			plane.rotation.x = - Math.PI / 2;
+			plane.position.set(-4, -1.5, -4);
+			plane.receiveShadow = true;
+			scene.add(plane);
+
+			renderer.render(scene, camera);
+		}
+
+		window.onload = function(){
+			init();
+		}
+
+		function drawAxes(scene) {
+            // x-axis
+            var xGeo = new THREE.Geometry();
+            xGeo.vertices.push(new THREE.Vector3(0, 0, 0));
+            xGeo.vertices.push(new THREE.Vector3(1, 0, 0));
+            var xMat = new THREE.LineBasicMaterial({
+                color: 0xff0000
+            });
+            var xAxis = new THREE.Line(xGeo, xMat);
+            scene.add(xAxis);
+            
+            // y-axis
+            var yGeo = new THREE.Geometry();
+            yGeo.vertices.push(new THREE.Vector3(0, 0, 0));
+            yGeo.vertices.push(new THREE.Vector3(0, 1, 0));
+            var yMat = new THREE.LineBasicMaterial({
+                color: 0x00ff00
+            });
+            var yAxis = new THREE.Line(yGeo, yMat);
+            scene.add(yAxis);
+            
+            // z-axis
+            var zGeo = new THREE.Geometry();
+            zGeo.vertices.push(new THREE.Vector3(0, 0, 0));
+            zGeo.vertices.push(new THREE.Vector3(0, 0, 1));
+            var zMat = new THREE.LineBasicMaterial({
+                color: 0x00ccff
+            });
+            var zAxis = new THREE.Line(zGeo, zMat);
+            scene.add(zAxis);
+        }
+	</script>
+</body>
+</html>
