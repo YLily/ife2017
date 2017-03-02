@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>纹理贴图3</title>
+	<script type="text/javascript" src="../js/three.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+		function init(){
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setClearColor(0xffffff);
+			renderer.setSize(800, 800);
+			document.getElementsByTagName('body')[0].appendChild(renderer.domElement);
+
+			var scene = new THREE.Scene();
+
+			var camera = new THREE.OrthographicCamera(-10, 10, 7.5, -7.5, 0.1, 100);
+			camera.position.set(0, 0, 25);
+			camera.lookAt(new THREE.Vector3(0, 0, 0));
+			scene.add(camera);
+
+			var light = new THREE.PointLight(0xffffff, 1, 200);
+			light.position.set(10, 15, 20);
+			scene.add(light);
+
+			var loader = new THREE.TextureLoader();
+			var texture = loader.load('img/black.png', function(){
+				renderer.render(scene, camera)
+			});
+			texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+			texture.repeat.set(4, 4);
+
+			var material = new THREE.MeshLambertMaterial({ map: texture });
+
+			var plane = new THREE.Mesh(new THREE.PlaneGeometry(12, 12), material);
+			scene.add(plane);
+
+			renderer.render(scene, camera);
+		}
+		window.onload = function(){
+			init()
+		}
+	</script>
+</body>
+</html>

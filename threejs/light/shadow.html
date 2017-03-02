@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>阴影</title>
+	<script type="text/javascript" src="../js/three.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+		function init(){
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize(800, 800)
+			renderer.setClearColor(0x000000);
+			document.getElementsByTagName('body')[0].appendChild(renderer.domElement);
+
+			renderer.shadowMap.enabled = true;
+            renderer.shadowMapSoft = true;
+
+			var scene = new THREE.Scene();
+		
+			var camera = new THREE.PerspectiveCamera(45, 1/1, 1, 20);
+			camera.position.set(1, 1, 10);
+			scene.add(camera);
+
+			var plane = new THREE.Mesh(new THREE.PlaneGeometry(8, 8, 16, 16),
+				new THREE.MeshLambertMaterial({color: 0xeeeeee}));
+			plane.rotation.x = -Math.PI / 2;
+			plane.position.y = -1;
+			plane.receiveShadow = true;
+			scene.add(plane);
+ 
+			var cube = new THREE.Mesh(new THREE.CubeGeometry(1, 1, 1),
+				new THREE.MeshLambertMaterial({color: 0x00ff00}));
+			cube.position.x = 2;
+			cube.castShadow = true;
+			scene.add(cube);
+
+			var light = new THREE.SpotLight(0xffff00, 1.2, 100, Math.PI/6, 25);
+			light.position.set(2, 5, 3);
+			//light.target.position.set(3, 5, 2);
+			light.target = cube;
+			light.castShadow = true;
+
+			light.shadow.camera.near = 1;
+			light.shadow.camera.far = 20;
+			light.shadow.camera.fov = 30;
+			light.shadow.camera.visible = true;
+
+			light.shadow.mapSize.width = 1024;
+			light.shadow.mapSize.height = 1024;
+
+			scene.add(light);
+
+			renderer.render(scene, camera);
+		}
+		window.onload = function(){
+			init();
+		}
+	</script>
+</body>
+</html>

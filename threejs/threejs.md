@@ -144,7 +144,7 @@ arc是圆环面的弧度，缺省值为Math.PI * 2
 p和q是控制其样式的参数，一般可以缺省
 heightScale是在z轴方向上的缩放
 
-### 文字形状 textGeometry
+#### 文字形状 textGeometry
 
 	THREE.TextGeometry(text, parameters)
 
@@ -159,7 +159,7 @@ heightScale是在z轴方向上的缩放
 * bevelThickness：倒角厚度
 * bevelSize：倒角宽度
 
-### 自定义形状
+#### 自定义形状
 
 	THREE.Geometry()
 	geometry.vertices.push(new THREE.Vector3(-1, 2, -1));
@@ -203,3 +203,156 @@ function drawAxes(scene) {
     scene.add(zAxis);
 }
 ```
+
+
+### light
+
+不透明的物体的颜色由其反射光决定
+
+#### 环境光
+
+    THREE.AmbientLight(hex)
+
+#### 点光源
+
+点光源照到不同物体表面的亮度是线性递减的，理点光源越远的物体越暗
+
+    THREE.PointLight(hex, intensity, distance)
+
+* hex 颜色
+* intensity 亮度，1
+* distance 光源最远照射到的距离，0
+
+#### 平行光
+
+    THREE.DirectionalLight(hex, intensity)
+
+平行光的位置很重要
+    
+    light.position.set(2, 5, 3)//平行光以矢量(-2, -5, -3)照射到所有平面
+
+#### 聚光灯
+    
+    THREE.SpotLight(hex, intensity, distance, angle, exponent)
+
+* angle 聚光灯的张角，Math.PI/3, 最大值是Math.PI/2 
+* exponent 光强在偏离target((0, 0, 0))的衰减指数，10
+
+除了设置光源外，还需要设置target
+
+    light.position.set(x, y, z);
+    light.target.position.set(x, y, z);
+
+#### 阴影
+
+能形成阴影的光源只有 THREE.DirectionalLight和THREE.SpotLight
+能表现阴影的材质只有 THREE.LambertMaterial和THREE.PhongMaterial
+
+    renderer.shadowMap.enabled = true;  //渲染器渲染阴影
+    xxx.castShadow = true;      //光源和所有要产生阴影的物体调用
+    xxx.receiveShadow = true;   //接收阴影的物体调用
+
+    ligth.shadowCameraVisible = true;  //调试时看到阴影照相机的位置
+
+spotLitht需设置
+
+* shadow.camera.near
+* shadow.camera.far
+* shadow.camera.fov  张角
+
+位于shadow.camera.near 和 shadow.camera.far直接的物体才能产生阴影
+
+平行光需设置
+
+* shadow.camera.near
+* shadow.camera.far
+* shadow.camera.left
+* shadow.camera.right
+* shadow.camera.top
+* shadow.camera.bottom
+
+
+
+### 材质
+
+#### 基本材质Basicaterial
+
+物体的颜色始终为该材质的颜色
+
+    THREE.MeshBasicMaterial(opt)
+
+* visibel 是否可见，默认true
+* side 渲染面是正面还是反面，默认正面THREE.FrontSide，可设置为反面THREE.BackSide或双面THREE.DoubleSide
+* wireframe 是否渲染线而非main，默认false
+* color
+* map 使用纹理贴图
+
+#### lambert光照模型材质
+
+只考虑漫反射而不考虑镜面反射
+
+    Idiffuse = Kd * Id * cos(theta)  //光照模型公式
+
+* idiffuse 漫反射光强
+* kd 物体表面的漫反射属性
+* id 光强
+* theta 光的入射角弧度
+
+    THREE.MeshLambertMaterial(opt)
+
+* ambient 对环境光的反射了能力，只有设置了AmbientLight后才有效，材质对环境光的反射能力与环境光强相乘后得到材质的实际表现颜色
+* emissive 材质的自发光颜色，可以用来表示光源的颜色
+
+
+#### phong光照模型材质
+
+考虑了镜面反射, 对金属、镜面的表现很合适
+
+    Ispecular = Ks * Is * (cos(alpha)) ^ n  //光照模型公式
+
+* Ispecular 镜面反射的光强
+* Ks 材质表面镜面反射系数
+* Is 光源强度
+* alpha 反射光与视线的夹角
+* n 高光指数，越大高光光斑越小
+
+不指定镜面反射系数，而只设定漫反射，其效果和lamberet是相同的
+
+    THREE.MeshPhongMaterial(opt)
+
+* specular 指定镜面反射系数
+* shininess 控制光照模型中的n值， 默认30
+
+#### 法向材质
+
+可以将材质的颜色设置为其法向量的方向
+
+    new THREE.MeshNormalMaterail()
+
+#### 纹理贴图
+
+```js
+var loader = new THREE.TextureLoader();
+var texture = loader.load('img/1.png', function(){
+ renderer.render(scene, camera)
+});
+
+var material = new THREE.MeshBasicMaterial({ map: texture });
+```
+
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;  //wrapS和wrapT都重复
+    texture.repeat.set(4, 4);
+
+wrapS x轴纹理的回环方式
+wrapT y轴纹理的回环方式
+
+### 网格
+
+    Mesh(goemetry, material)
+
+    mesh.position.set(1.5, -0.5, 0);
+    mesh.position = new THREE.Vector3(1.5, -0.5, 0);
+
+* position 位置
+* scale 缩放
+* rotation 旋转
