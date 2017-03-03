@@ -401,7 +401,7 @@ ajax 导入 .vs 文件  和 .fs 文件
 ```js
 $.get('shader/my.vs', function(vShader){
 	$.get('shader/my.fs', function(fShader){
-		material = new THREE.ShaderMaterial({{
+		material = new THREE.ShaderMaterial({
 			vertexShader: vShader,
 			fargmentShader: fShader
 		})
