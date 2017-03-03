@@ -45,7 +45,7 @@
 				scene.add(light);
 
 				var loader = new THREE.OBJLoader();
-				loader.load('lib/teapot.obj', function(obj){
+				loader.load('../lib/teapot.obj', function(obj){
 					obj.traverse(function(child) {
 				        if (child instanceof THREE.Mesh) {
 				           //child.material.side = THREE.DoubleSide;

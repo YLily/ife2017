@@ -41,13 +41,13 @@
 				scene.add(light);
 
 				var mtlLoader = new THREE.MTLLoader();
-				mtlLoader.setPath('lib/');
+				mtlLoader.setPath('../lib/');
 				mtlLoader.load('teapot.mtl', function(materials){
 					materials.preload();
 					var objLoader = new THREE.OBJLoader();
 					objLoader.setMaterials(materials);
-					objLoader.setPath('lib/');
-					objLoade r.load('teapot.obj', function(obj){
+					objLoader.setPath('../lib/');
+					objLoader.load('teapot.obj', function(obj){
 						obj.traverse(function(child) {
 					        if (child instanceof THREE.Mesh) {
 					            child.material.side = THREE.DoubleSide;
