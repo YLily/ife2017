@@ -356,3 +356,65 @@ wrapT y轴纹理的回环方式
 * position 位置
 * scale 缩放
 * rotation 旋转
+
+
+### 动画
+
+setInterval
+clearInterval
+
+requestAnimationFrame
+cancelAnimationFrame
+
+### 外部模型
+
+支持格式
+
+* *.obj
+* *.mtl
+* *.dae
+* *.ctm
+* *.ply
+* *.stl
+* *.wrl
+* *.vtk
+
+### 着色器
+
+* 几何着色器(Geometry Shader)
+* 顶点着色器(Vertex Shader) .vs
+* 片元着色器(Fragment Shader) .fs
+
+WebGL定义的限定符(Qualifier)
+
+* const 常量
+* attribute 从js代码传递到顶点着色器，每个顶点对应不同的值
+* uniform 每个顶点/片元对应相同的值
+* varying 从顶点着色器传到片元着色器中
+
+不写限定符，默认只有在当前文件中能访问
+
+uv UV映射时的横纵坐标
+position 顶点在物体坐标系(不是世界坐标系)中的位置
+
+ajax 导入 .vs 文件  和 .fs 文件
+```js
+$.get('shader/my.vs', function(vShader){
+	$.get('shader/my.fs', function(fShader){
+		material = new THREE.ShaderMaterial({{
+			vertexShader: vShader,
+			fargmentShader: fShader
+		})
+	})
+})
+```
+
+```js
+	<script id="vs" type="x-shader/x-verterx">.vs文件中的内容</script>
+	<script id="fs" type="x-shader/x-fragment">.fs文件中的内容</script>
+	material = new THREE.ShaderMaterial({
+		vertexShader: document.getElementById('vs').textContent,
+		fragmentShader: document.getElementById('fs').textContent
+	})
+```
+

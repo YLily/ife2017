@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>小车模型</title>
+	<script type="text/javascript" src="js/three.js"></script>
+	<script type="text/javascript" src="js/OBJLoader.js"></script>
+	<script type="text/javascript" src="js/MTLLoader.js"></script>
+	<script type="text/javascript" src="js/stats.min.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+		window.onload = function(){
+			var requestAnimationFrame = window.requestAnimationFrame ||
+				window.mozRequestAnimationFrame ||
+				window.webkitRequestAnimationFrame ||
+				window.msRequestAnimationFrame;
+			window.requestAnimationFrame = requestAnimationFrame;
+
+			var renderer, scene, camera, mesh, stats;
+
+			init();
+
+			function init(){
+				renderer = new THREE.WebGLRenderer();
+				renderer.setClearColor(0xeeeeee);
+				renderer.setSize(window.innerWidth, window.innerHeight);
+				renderer.shadowMap.enabled = true;
+				document.getElementsByTagName('body')[0].appendChild(renderer.domElement);
+
+				scene = new THREE.Scene();
+
+				camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 1, 20000);
+				camera.position.set(3000, 1000, 3600);
+				camera.lookAt(new THREE.Vector3(0, 0, 0));
+				scene.add(camera);
+
+				var light = new THREE.SpotLight(0xffffff, 2, 20000, Math.PI/2);
+				light.position.set(2000, 1020, 3680);
+				light.castShadow = true;
+				scene.add(light);
+
+				var mtlLoader = new THREE.MTLLoader();
+				mtlLoader.setPath('lib/');
+				mtlLoader.load('mazda.mtl', function(materials){
+					materials.preload();
+					var objLoader = new THREE.OBJLoader();
+					objLoader.setMaterials(materials);
+					objLoader.setPath('lib/');
+					objLoader.load('mazda.obj', function(obj){
+						obj.traverse(function(child) {
+					        if (child instanceof THREE.Mesh) {
+					            child.material.side = THREE.DoubleSide;
+					    	}
+						});
+						mesh = obj;
+						scene.add(obj);
+					}, onProgress, onError)
+				})
+
+				// model
+				var onProgress = function ( xhr ) {
+					if ( xhr.lengthComputable ) {
+						var percentComplete = xhr.loaded / xhr.total * 100;
+						console.log( Math.round(percentComplete, 2) + '% downloaded' );
+					}
+				};
+				var onError = function ( xhr ) { };
+
+				stats = new Stats();
+				document.getElementsByTagName('body')[0].appendChild(stats.domElement);
+				//renderer.render(scene, camera);
+				
+				setInterval(draw, 20);
+			}
+
+			function draw(){
+				stats.begin();
+				mesh.rotation.y += 0.01;
+				if(mesh.rotation.y > Math.PI * 2){
+					mesh.rotation.y -= Math.PI * 2;
+				}
+				renderer.render(scene, camera);
+				stats.end();
+			}
+		}
+	</script>
+</body>
+</html>
