@@ -20,36 +20,81 @@
 		function chart(){
 			var bChart = echarts.init(document.getElementById('barChart'));
 			var option = {
-				title: {
-					top: '10px',
+				title: [{
+					top: 10,
 					left: '5%',
 					text: '一周空气污染调查报告',
-					subtext: '数据纯属虚构'
-				},
+					textStyle: {
+						color: '#fff',
+						fontSize: 20
+					},
+					subtext: '数据纯属虚构',
+					subtextStyle: {
+						color: '#fff'
+					}
+				},{
+					text: '北京、上海、武汉一周空气污染报告',
+					bottom: 10,
+					left: '5%',
+					textStyle: {
+						color: '#fff'
+					}
+				}],
 				legend: {
 					left: '5%',
-					top: '60px',
-					data: ['北京', '上海', '武汉']
+					top: 65,
+					data: ['北京', '上海', '武汉'],
+					textStyle: {
+						color: '#fff'
+					}
 				},
 				grid: {
 					top: '12%',
 					left: '6%',
 					right: '6%',
-					bottom: '6%'
+					bottom: '10%'
 				},
-				xAxis: {
+				xAxis: [{
+					axisLine: {
+						onZero: false,
+						lineStyle: {
+							color: '#FFA0C2'
+						}
+					},
+					axisTick: {
+						inside: true,
+						alignWithLabel: true
+					},
+					axisLabel: {
+						textStyle: {
+							fontSize: 16
+						}
+					},
 					data: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']
-				},
+				},{
+					axisLine: {
+						lineStyle: {
+							color: '#ED9153',
+							width: 2
+						}
+					}
+				}],
 				yAxis: {
 					name: '污染值',
 					position: 'right',
-					inverse: true
+					inverse: true,
+					axisLine: {
+						show: false
+					},
+					splitLine: {
+						lineStyle: {
+							color: ['#fff']
+						}
+					},
+					axisTick: {
+						show: false
+					}
 				},
-				backgroundColor: '#f7f7f7',
-				textStyle: {
-			        color: 'rgba(55, 55, 55, .8)',
-			        fontWeight: 'bold'
-			    },
 				tooltip: {
 					trigger: 'axis',
 					axisPointer: {
@@ -57,6 +102,11 @@
 					}
 				},
 				color: ['#11BFAE', '#90D26D', '#F73F52'],
+				backgroundColor: '#1B435D',
+				textStyle: {
+			        color: 'rgba(255, 255, 255, 1)',
+			        fontWeight: 'bold'
+			    },
 				series: [{
 						name: '北京',
 						type: 'bar',
