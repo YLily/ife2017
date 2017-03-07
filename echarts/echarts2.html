@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>自定义统计图表</title>
+	<style type="text/css">
+		body{
+			margin: 0px;
+		}
+		.chart{
+			width: 1000px;
+			height: 800px;
+		}
+	</style>
+	<script type="text/javascript" src="js/echarts.min.js"></script>
+</head>
+<body>
+	<div id="barChart" class="chart"></div>
+	<script type="text/javascript">
+		function chart(){
+			var bChart = echarts.init(document.getElementById('barChart'));
+			var option = {
+				title: {
+					top: '10px',
+					left: '5%',
+					text: '一周空气污染调查报告',
+					subtext: '数据纯属虚构'
+				},
+				legend: {
+					left: '5%',
+					top: '60px',
+					data: ['北京', '上海', '武汉']
+				},
+				grid: {
+					top: '12%',
+					left: '6%',
+					right: '6%',
+					bottom: '6%'
+				},
+				xAxis: {
+					data: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']
+				},
+				yAxis: {
+					name: '污染值',
+					position: 'right',
+					inverse: true
+				},
+				backgroundColor: '#f7f7f7',
+				textStyle: {
+			        color: 'rgba(55, 55, 55, .8)',
+			        fontWeight: 'bold'
+			    },
+				tooltip: {
+					trigger: 'axis',
+					axisPointer: {
+						type: 'shadow'
+					}
+				},
+				color: ['#11BFAE', '#90D26D', '#F73F52'],
+				series: [{
+						name: '北京',
+						type: 'bar',
+						data: [113, 56, 87, 108, 164, 189, 131]
+					}, {
+						name: '上海',
+						type: 'bar',
+						data: [52, 73, 82, 93, 59, 81, 84]
+					}, {
+						name: '武汉',
+						type: 'bar',
+						data: [107, 88, 98, 49, 65, 78, 92]
+					}]
+				}
+			bChart.setOption(option);
+		}
+		window.onload = function(){
+			chart();
+		}
+	</script>
+</body>
+</html>
