@@ -20,12 +20,14 @@
 	<script type="text/javascript">
 		function prossData(rawData){
 			var values = [],
-				date = [];
+				date = [],
+				volume = [];
 			for(var i = 0, len = rawData.length; i < len; i++){
 				date.push(rawData[i].Data),
+				volume.push(rawData[i].Volume),
 				values.push([rawData[i].Open, rawData[i].Close, rawData[i].Hight, rawData[i].Low]);
 			}
-			return {date: date, values: values}
+			return {date: date, volume: volume, values: values}
 		}
 		function average(day, value){
 			var result = [];
@@ -45,12 +47,15 @@
 		window.onload = function(){
 			$.get('src/data.json', function(rawData){
 				var data = prossData(rawData);
-				var av10 = average(10, data.values),
+				var av5 = average(5, data.values),
+					av10 = average(10, data.values),
+					av20 = average(20, data.values),
 					av30 = average(30, data.values);
 				var chart = echarts.init(document.getElementById('chart'));
 				chart.setOption({
 					title: {
-						text: '股票数据'
+						text: 'A公司股票数据',
+						left: '6%'
 					},
 					tooltip:{
 						trigger: 'axis',
@@ -59,23 +64,55 @@
 						}
 					},
 					legend: {
-						data: ['日K', 'MA10', 'MA30']
+						data: ['日K', 'MA5', 'MA10', 'MA20', 'MA30'],
+						top: '5%',
+						left: '6%'
 					},
-					color: ['#11BFAE', '#F73F52', '#90D26D', '#F9A1BC', '#F7AF1D'],
+					color: ['#11BFAE', '#F7AF1D', '#F73F52', '#90D26D', '#86EE60'],
 					backgroundColor: '#f7f7f7',
-					grid: {
-						top: '12%',
+					grid: [{
+						top: '10%',
 						left: '6%',
 						right: '6%',
-						bottom: '16%'
+						height: '60%'
+					}, {
+						bottom: '10%',
+						left: '6%',
+						right: '6%',
+						height: '16%'
+					}],
+					brush: {
+						xAxisIndex: 'all',
+						yAixsIndex: 'all',
+						outOfBrush: {
+							colorAlpha: 0.1
+						}
 					},
-					xAxis: {
+					dataZoom: [
+						{
+			                type: 'inside',
+			                xAxisIndex: [0, 1],
+			                start: 10,
+			                end: 60
+			            },
+			            {
+			                show: true,
+			                xAxisIndex: [0, 1],
+			                backgroundColor: '#384259',
+			                type: 'slider',
+			                bottom: '3%',
+			                start: 10,
+			                end: 60
+			            }
+					],
+					xAxis: [{
 						type: 'category',
 						data: data.date,
 						min: 'dataMin',
 						max: 'dataMax',
+						scale: true,
 						axisLine: {
-								onZero: false,
+							onZero: false,
 							lineStyle: {
 								color: '#ccc',
 								width: 2
@@ -90,8 +127,24 @@
 								return value.substring(0,4) + '/' + value.substring(4,6) + '/' + value.substring(6,8)
 							}
 						}
-					},
-					yAxis: {
+					}, {
+						type: 'category',
+						data: data.date,
+						scale: true,
+						gridIndex: 1,
+						axisLine: {
+							lineStyle: {
+								color: '#ccc'
+							}
+						},
+						axisLabel: {
+							show: false
+						},
+						axisTick: {
+							show: false
+						}
+					}],
+					yAxis: [{
 						scale: true,
 						axisLine: {
 							lineStyle: {
@@ -102,32 +155,48 @@
 						axisTick: {
 							show: false
 						}
-					},
-					dataZoom: [
-						{
-			                type: 'inside',
-			                xAxisIndex: 0,
-			                start: 20,
-			                end: 20.2
-			            },
-			            {
-			                show: true,
-			                xAxisIndex: 0,
-			                backgroundColor: '#52D681',
-			                type: 'slider',
-			                bottom: '6%',
-			                start: 20,
-			                end: 20.2
-			            }
-					],
+					}, {
+						scale: true,
+						gridIndex: 1,
+						axisLine: {
+							show: false
+						},
+						axisTick: {
+							show: false
+						},
+						axisLabel: {
+							show: false
+						},
+						splitLine: {
+							show: false
+						}
+					}],
 					series: [{
 						name: '日K',
 						type: 'candlestick',
 						data: data.values
 					}, {
+						name: 'MA5',
+						type: 'line',
+						data: av5,
+						lineStyle: {
+							normal: {
+								opacity: 0.5
+							}
+						}
+					},{
 						name: 'MA10',
 						type: 'line',
 						data: av10,
+						lineStyle: {
+							normal: {
+								opacity: 0.5
+							}
+						}
+					}, {
+						name: 'MA20',
+						type: 'line',
+						data: av20,
 						lineStyle: {
 							normal: {
 								opacity: 0.5
@@ -142,6 +211,12 @@
 								opacity: 0.5
 							}
 						}
+					}, {
+						name: 'volumn',
+						type: 'bar',
+						xAxisIndex: 1,
+						yAxisIndex: 1,
+						data: data.volume
 					}]
 				})
 			})

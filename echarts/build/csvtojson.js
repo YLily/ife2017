@@ -11,7 +11,11 @@ var arr = [];
 csv()
 .fromFile(csvFilePath)
 .on('json',(jsonObj, index)=>{
-	arr[index] = jsonObj;
+	if(index < 10)
+		console.log(jsonObj)
+	if(jsonObj.Ticker === 'A'){
+		arr[index] = jsonObj;
+	}
 })
 .on('done',(error)=>{
     fs.writeFile(path.join(rootPath,'src/data.json'), JSON.stringify(arr));

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>地图</title>
+	<style type="text/css">
+		body{
+			margin: 0px;
+		}
+		.chart{
+			width: 1000px;
+			height: 800px;
+		}
+	</style>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/echarts.min.js"></script>
+</head>
+<body>
+	<div id="map" class="chart"></div>
+	<script type="text/javascript">
+		function chart(){
+			$.get('map/map.json', function(mapJson){
+				echarts.registerMap('map', mapJson);
+				var map = echarts.init(document.getElementById('map'));
+				map.setOption(option);
+			})
+			var option = {
+				geo: {
+
+				},
+				series: [{
+						name: '北京',
+						type: 'geo',
+						data: [113, 56, 87, 108, 164, 189, 131]
+					}, {
+						name: '上海',
+						type: 'geo',
+						data: [52, 73, 82, 93, 59, 81, 84]
+					}, {
+						name: '武汉',
+						type: 'geo',
+						data: [107, 88, 98, 49, 65, 78, 92]
+					}]
+				}
+		}
+		window.onload = function(){
+			chart();
+		}
+	</script>
+</body>
+</html>
