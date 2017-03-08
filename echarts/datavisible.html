@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>数据可视化预处理</title>
+	<style type="text/css">
+		body{
+			margin: 0px;
+		}
+		.chart{
+			width: 1000px;
+			height: 800px;
+		}
+	</style>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/echarts.min.js"></script>
+</head>
+<body>
+	<div id="chart" class="chart"></div>
+	<script type="text/javascript">
+		function prossData(rawData){
+			var values = [],
+				date = [];
+			for(var i = 0, len = rawData.length; i < len; i++){
+				date.push(rawData[i].Data),
+				values.push([rawData[i].Open, rawData[i].Close, rawData[i].Hight, rawData[i].Low]);
+			}
+			return {date: date, values: values}
+		}
+		function average(day, value){
+			var result = [];
+			for(var i = 0, len = value.length; i < len; i++){
+				if(i < day){
+					result.push('-');
+					continue;
+				}
+				var sum = 0;
+				for(var j = 0; j < day; j++){
+					sum += parseInt(value[i-j][1]);
+				}
+				result.push((sum/day).toFixed(2));
+			}
+			return result;
+		}
+		window.onload = function(){
+			$.get('src/data.json', function(rawData){
+				var data = prossData(rawData);
+				var av10 = average(10, data.values),
+					av30 = average(30, data.values);
+				var chart = echarts.init(document.getElementById('chart'));
+				chart.setOption({
+					title: {
+						text: '股票数据'
+					},
+					tooltip:{
+						trigger: 'axis',
+						axisPointer: {
+							type: 'line'
+						}
+					},
+					legend: {
+						data: ['日K', 'MA10', 'MA30']
+					},
+					color: ['#11BFAE', '#F73F52', '#90D26D', '#F9A1BC', '#F7AF1D'],
+					backgroundColor: '#f7f7f7',
+					grid: {
+						top: '12%',
+						left: '6%',
+						right: '6%',
+						bottom: '16%'
+					},
+					xAxis: {
+						type: 'category',
+						data: data.date,
+						min: 'dataMin',
+						max: 'dataMax',
+						axisLine: {
+								onZero: false,
+							lineStyle: {
+								color: '#ccc',
+								width: 2
+							}
+						},
+						axisTick: {
+							inside: true,
+							alignWithLabel: true
+						},
+						axisLabel: {
+							formatter: function(value){
+								return value.substring(0,4) + '/' + value.substring(4,6) + '/' + value.substring(6,8)
+							}
+						}
+					},
+					yAxis: {
+						scale: true,
+						axisLine: {
+							lineStyle: {
+								color: '#ccc',
+								width: 2
+							}
+						},
+						axisTick: {
+							show: false
+						}
+					},
+					dataZoom: [
+						{
+			                type: 'inside',
+			                xAxisIndex: 0,
+			                start: 20,
+			                end: 20.2
+			            },
+			            {
+			                show: true,
+			                xAxisIndex: 0,
+			                backgroundColor: '#52D681',
+			                type: 'slider',
+			                bottom: '6%',
+			                start: 20,
+			                end: 20.2
+			            }
+					],
+					series: [{
+						name: '日K',
+						type: 'candlestick',
+						data: data.values
+					}, {
+						name: 'MA10',
+						type: 'line',
+						data: av10,
+						lineStyle: {
+							normal: {
+								opacity: 0.5
+							}
+						}
+					}, {
+						name: 'MA30',
+						type: 'line',
+						data: av30,
+						lineStyle: {
+							normal: {
+								opacity: 0.5
+							}
+						}
+					}]
+				})
+			})
+		}
+	</script>
+</body>
+</html>
