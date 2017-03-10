@@ -11,8 +11,6 @@ var arr = [];
 csv()
 .fromFile(csvFilePath)
 .on('json',(jsonObj, index)=>{
-	if(index < 10)
-		console.log(jsonObj)
 	if(jsonObj.Ticker === 'A'){
 		arr[index] = jsonObj;
 	}
