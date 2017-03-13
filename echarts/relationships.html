@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>人物关系</title>
+	<style type="text/css">
+		body{
+			margin: 0px;
+		}
+		.chart{
+			width: 1000px;
+			height: 800px;
+		}
+	</style>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/echarts.min.js"></script> 
+	<script type="text/javascript" src="js/dataTool.min.js"></script>
+</head>
+<body>
+	<div id="chart" class="chart"></div>
+	<script type="text/javascript">
+		window.onload = function(){
+			var chart = echarts.init(document.getElementById('chart'));
+			chart.showLoading();
+			$.get('src/les-miserables.gexf', function(xml){
+				chart.hideLoading();
+				var graph = echarts.dataTool.gexf.parse(xml);
+				var categories = [];
+				for(var i = 0; i < 9; i++){
+					categories[i] = {
+						name: '类目' + i
+					}
+				}
+				chart.setOption({
+					title: {
+						text: 'les miserables',
+						left: '6%'
+					},
+					tooltip:{},
+					legend: {
+						data: categories.map(function(a){
+							return a.name;
+						}),
+						top: '5%',
+						left: '6%'
+					},
+					color: ['#11BFAE', '#F7AF1D', '#F73F52', '#90D26D', '#86EE60', '#D7AEF3', '#F9A1BC', '#55A44E', '#F3558E'],
+					backgroundColor: '#f7f7f7',
+					grid: {
+						top: '10%',
+						left: '6%',
+						right: '6%',
+						bottom: '6%'
+					},
+					datazoom: {
+						type: 'inside'
+					},
+					series: [{
+						name: 'les miserables',
+						type: 'graph',
+						layout: 'force',
+						data: graph.nodes.map(function(node){
+							node.x = node.y = null,
+							node.itemStyle = null,
+							node.value = node.symbolSize,
+							node.symbolSize = 20,
+							node.category = node.attributes.modularity_class;
+							return node;
+						}),
+						links: graph.links,
+						categories: categories,
+						symbol: 'triangle',
+						roam: true,
+						draggable: true,
+						label: {
+							normal: {
+								position: 'right'
+							}
+						},
+						force: {
+							repulsion: 100
+						}
+					}]
+				})
+			}, 'xml')
+		}
+	</script>
+</body>
+</html>
