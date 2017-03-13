@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>动态数据</title>
+	<style type="text/css">
+		body{
+			margin: 0px;
+		}
+		.chart{
+			width: 1000px;
+			height: 800px;
+		}
+	</style>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/echarts.min.js"></script>
+</head>
+<body>
+	<div id="chart" class="chart"></div>
+	<script type="text/javascript">
+		function prossData(num, range, rawData, timer){
+			var values = [],
+				date = [],
+				volume = [];
+			if(range >= rawData.length){
+				clearInterval(timer);
+			}
+			for(var i = num; i < range; i++){
+				date.push(rawData[i].Data),
+				volume.push(rawData[i].Volume),
+				values.push([rawData[i].Open, rawData[i].Close, rawData[i].Hight, rawData[i].Low]);
+			}
+			console.log(rawData.length);
+			console.log(num)
+			return {date: date, volume: volume, values: values}
+		}
+		function average(day, value){
+			var result = [];
+			for(var i = 0, len = value.length; i < len; i++){
+				if(i < day){
+					result.push('-');
+					continue;
+				}
+				var sum = 0;
+				for(var j = 0; j < day; j++){
+					sum += parseInt(value[i-j][1]);
+				}
+				result.push((sum/day).toFixed(2));
+			}
+			return result;
+		}
+		window.onload = function(){
+			var chart = echarts.init(document.getElementById('chart'));
+			chart.setOption({
+				title: {
+					text: 'A公司股票数据',
+					left: '6%'
+				},
+				tooltip:{
+					trigger: 'axis',
+					axisPointer: {
+						type: 'line'
+					}
+				},
+				legend: {
+					data: ['日K', 'MA5', 'MA10', 'MA20', 'MA30'],
+					top: '5%',
+					left: '6%'
+				},
+				color: ['#11BFAE', '#F7AF1D', '#F73F52', '#90D26D', '#86EE60'],
+				backgroundColor: '#f7f7f7',
+				grid: [{
+					top: '10%',
+					left: '6%',
+					right: '6%',
+					height: '60%'
+				}, {
+					bottom: '10%',
+					left: '6%',
+					right: '6%',
+					height: '16%'
+				}],
+				brush: {
+					xAxisIndex: 'all',
+					yAixsIndex: 'all',
+					outOfBrush: {
+						colorAlpha: 0.1
+					}
+				},
+				dataZoom: [
+					{
+		                type: 'inside',
+		                xAxisIndex: [0, 1],
+		                start: 0,
+		                end: 100
+		            },
+		            {
+		                show: true,
+		                xAxisIndex: [0, 1],
+		                backgroundColor: '#384259',
+		                type: 'slider',
+		                bottom: '3%',
+		                start: 0,
+		                end: 100
+		            }
+				],
+				yAxis: [{
+					scale: true,
+					axisLine: {
+						lineStyle: {
+							color: '#ccc',
+							width: 2
+						}
+					},
+					axisTick: {
+						show: false
+					}
+				}, {
+					scale: true,
+					gridIndex: 1,
+					axisLine: {
+						show: false
+					},
+					axisTick: {
+						show: false
+					},
+					axisLabel: {
+						show: false
+					},
+					splitLine: {
+						show: false
+					}
+				}],
+				xAxis: [{
+					type: 'category',
+					min: 'dataMin',
+					max: 'dataMax',
+					scale: true,
+					axisLine: {
+						onZero: false,
+						lineStyle: {
+							color: '#ccc',
+							width: 2
+						}
+					},
+					axisTick: {
+						inside: true,
+						alignWithLabel: true
+					},
+					axisLabel: {
+						formatter: function(value){
+							return value.substring(0,4) + '/' + value.substring(4,6) + '/' + value.substring(6,8)
+						}
+					}
+				}, {
+					type: 'category',
+					scale: true,
+					gridIndex: 1,
+					axisLine: {
+						lineStyle: {
+							color: '#ccc'
+						}
+					},
+					axisLabel: {
+						show: false
+					},
+					axisTick: {
+						show: false
+					}
+				}],
+			})
+
+			$.get('src/data.json', function(rawData){
+				var num = 0, range = 30;
+				var timer = setInterval(function(){
+					var data = prossData(num, range, rawData, timer);
+					num++, range++;
+					var av5 = average(5, data.values),
+						av10 = average(10, data.values),
+						av20 = average(20, data.values),
+						av30 = average(30, data.values);
+					chart.setOption({
+						xAxis: [{
+							data: data.date
+						}, {
+							data: data.date
+						}],
+						series: [{
+							name: '日K',
+							type: 'candlestick',
+							data: data.values
+						}, {
+							name: 'MA5',
+							type: 'line',
+							data: av5,
+							lineStyle: {
+								normal: {
+									opacity: 0.5
+								}
+							}
+						},{
+							name: 'MA10',
+							type: 'line',
+							data: av10,
+							lineStyle: {
+								normal: {
+									opacity: 0.5
+								}
+							}
+						}, {
+							name: 'MA20',
+							type: 'line',
+							data: av20,
+							lineStyle: {
+								normal: {
+									opacity: 0.5
+								}
+							}
+						}, {
+							name: 'MA30',
+							type: 'line',
+							data: av30,
+							lineStyle: {
+								normal: {
+									opacity: 0.5
+								}
+							}
+						}, {
+							name: 'volumn',
+							type: 'bar',
+							xAxisIndex: 1,
+							yAxisIndex: 1,
+							data: data.volume
+						}]
+					})
+				}, 200)
+			})
+		}
+	</script>
+</body>
+</html>
