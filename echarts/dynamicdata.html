@@ -80,30 +80,6 @@
 					right: '6%',
 					height: '16%'
 				}],
-				brush: {
-					xAxisIndex: 'all',
-					yAixsIndex: 'all',
-					outOfBrush: {
-						colorAlpha: 0.1
-					}
-				},
-				dataZoom: [
-					{
-		                type: 'inside',
-		                xAxisIndex: [0, 1],
-		                start: 0,
-		                end: 100
-		            },
-		            {
-		                show: true,
-		                xAxisIndex: [0, 1],
-		                backgroundColor: '#384259',
-		                type: 'slider',
-		                bottom: '3%',
-		                start: 0,
-		                end: 100
-		            }
-				],
 				yAxis: [{
 					scale: true,
 					axisLine: {
@@ -169,8 +145,9 @@
 					}
 				}],
 			})
-
+			chart.showLoading();
 			$.get('src/data.json', function(rawData){
+				chart.hideLoading();
 				var num = 0, range = 30;
 				var timer = setInterval(function(){
 					var data = prossData(num, range, rawData, timer);
