@@ -188,7 +188,7 @@ ColorPicker.prototype.showBg = function(){
 	color += Number(this.bg[1]).toString(16) == 0 ? '00' : Number(this.bg[1]).toString(16);
 	color += Number(this.bg[2]).toString(16) == 0 ? '00' : Number(this.bg[2]).toString(16);
 
-	this.area.style.background = '-webkit-linear-gradient(-45deg, #fff, '+color+', #000)';
+	this.area.style.backgroundColor = color;
 },
 ColorPicker.prototype.showPicker = function(){
 	this.areaPicker.style.left = this.hsb[1]/100 * (this.area.offsetWidth - this.areaPicker.offsetWidth) + 'px';
