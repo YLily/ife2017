@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>动态数据绑定三</title>
+</head>
+<body>
+	<script type="text/javascript" src="js/dynamic3.js"></script>
+	<script type="text/javascript">
+		let p = new Observer({
+			name: {
+				first: 'chaw',
+				last: 'Lily'
+			},
+			age: '22'
+		});
+
+		p.$watch('name', function(){
+			console.log(`可能是姓氏变了也可能是名字变了`);
+		})
+		
+	</script>
+</body>
+</html>
