@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>动态数据绑定二</title>
+</head>
+<body>
+	<script type="text/javascript" src="js/dynamic2.js"></script>
+	<script type="text/javascript">
+		let p = new Observer({
+			name: {
+				first: 'chaw',
+				last: 'Lily'
+			},
+			age: '22'
+		});
+
+		p.$watch('age', function(age){
+			console.log('我长大了，我的年纪是'+age+'岁了');
+		})
+
+	</script>
+</body>
+</html>
