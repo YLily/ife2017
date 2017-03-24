@@ -1,3 +1,24 @@
+/*
+	watcher get 
+	observer get
+	dep add sub
+
+	get: 
+	
+	observer get
+
+	set: 
+
+	observer set
+	dep notify
+
+	watcher update
+	watcher get  
+
+	observer get 
+
+	dep add sub
+*/
 function Observer(data){
 	this.data = data;
 	this.walk(this.data);
@@ -54,6 +75,7 @@ dp.addSub = function(sub){
 	this.subs.push(sub)
 }
 dp.notify = function(){
+	console.log(this.subs);
 	this.subs.forEach(sub => sub.update())
 }
 Dep.target = null;
